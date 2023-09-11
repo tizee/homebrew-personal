@@ -13,7 +13,9 @@ A simple offline documentation browser, which could be considered as an open sou
 
 ```
 brew install --HEAD zeal
+cp -Rp $(brew --prefix zeal)/Zeal.app /Applications/
 ```
+
 The scirpt is modified from:
 
 - https://github.com/markwu/homebrew-personal
