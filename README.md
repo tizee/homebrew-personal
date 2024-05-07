@@ -2,10 +2,12 @@
 
 ## Usage
 
-```zsh
+```
 brew tap tizee/personal
 ```
+
 ## Formula
+
 
 ### Zeal.app
 
@@ -23,3 +25,6 @@ The scirpt is modified from:
 
 See https://github.com/zealdocs/zeal/wiki/Build-Instructions-for-macOS for more details.
 
+## Other taps
+
+- [plan9port-rb](https://github.com/tizee/plan9port-rb/tree/main)
