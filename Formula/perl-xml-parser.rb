@@ -21,7 +21,8 @@ class PerlXmlParser < Formula
 
   def install
     ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5" unless Formula["perl"].any_version_installed?
-    system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
+    put "use homebrew installed perl" if Formula["perl"].any_version_installed?
+    system Formula["perl"].bin/"perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
     system "make", "PERL5LIB=#{ENV["PERL5LIB"]}" unless Formula["perl"].any_version_installed?
     system "make", "install"
   end
