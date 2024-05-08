@@ -14,7 +14,7 @@ brew tap tizee/personal
 A simple offline documentation browser, which could be considered as an open source alternative for Dash in macOS.
 
 ```
-brew install --HEAD zeal
+brew install --HEAD tizee/personal/zeal
 cp -Rp $(brew --prefix zeal)/Zeal.app /Applications/
 ```
 

@@ -14,11 +14,11 @@ class Zeal < Formula
     <<~EOS
     You can move Zeal.app to the Applications folder.
 
-    Apple Silicon
+      Apple Silicon:
 
       cp -Rp /opt/homebrew/Cellar/zeal/*/Zeal.app /Applications/
 
-      Intel Macs
+      Intel Macs:
 
       cp -Rp /usr/local/Cellar/zeal/*/Zeal.app ~/Applications/
 
