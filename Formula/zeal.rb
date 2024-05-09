@@ -1,6 +1,3 @@
-# vim:ft=ruby
-require 'formula'
-
 class Zeal < Formula
   desc 'Zeal is a simple offline documentation browser inspired by Dash.'
   homepage "http://zealdocs.org/"
@@ -12,15 +9,15 @@ class Zeal < Formula
 
   def caveats
     <<~EOS
-    You can move Zeal.app to the Applications folder.
+    You can move Zeal.app to the Applications folder if you do not prefer symlink.
 
       Apple Silicon:
 
-      cp -Rp /opt/homebrew/Cellar/zeal/*/Zeal.app /Applications/
+      cp -Rp $(brew --prefix zeal)/Zeal.app /Applications/
 
       Intel Macs:
 
-      cp -Rp /usr/local/Cellar/zeal/*/Zeal.app ~/Applications/
+      cp -Rp $(brew --prefix zeal)/Zeal.app /Applications/
 
     EOS
   end
@@ -29,12 +26,18 @@ class Zeal < Formula
       system "cmake", "-S", ".", "-B", "build", *std_cmake_args
       system "cmake", "--build", "build"
       system "cmake", "--install", "build"
-      prefix.install "build/Zeal.app"
-      (bin/"zeal").write("#! /bin/sh\n#{prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
+      opt_prefix.install "build/Zeal.app"
+
+      system "codesign", "--force", "-s", "-", "#{opt_prefix}/Zeal.app/Contents/MacOS/Zeal"
+
+      # link to /Applications
+      (opt_prefix/"Zeal.app").install_symlink "/Applications/Zeal.app"
+
+      (bin/"zeal").write("#!/bin/sh\n#{opt_prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
   end
 
   test do
-    system "zeal", "-h"
+    assert_match "Zeal", shell_output("#{bin}/zeal --version")
   end
 end
 
