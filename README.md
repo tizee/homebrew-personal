@@ -17,7 +17,7 @@ brew tap tizee/personal
 
 - ✅ `zeal`
     - A simple offline documentation browser, which could be considered as an open source alternative for Dash in macOS.
-- 🚧`tmux`
+- ✅ `tmux`
     - build terminal multiplexer with OSC8 hyperlinks support
 - ✅ `perl-xml-parser`
     - building with homebrew's `perl` instead of building against system `perl`
