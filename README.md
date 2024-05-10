@@ -64,7 +64,7 @@ brew install --HEAD tizee/personal/aseprite
 
 - link to `/Applications`
 ```
-ln -s $(brew --prefix zeal)/Zeal.app /Applications/Zeal.app
+ln -s $(brew --prefix aseprite)/Aseprite.app /Applications/Aseprite.app
 ```
 
 ### Zeal.app
