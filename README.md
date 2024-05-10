@@ -27,7 +27,7 @@ brew tap tizee/personal
     - A screenfetch/neofetch-like alternative
 - ✅ `borders`
     - Draw borders for yabai
-- 🚧 `yabai`
+- ✅ `yabai`
     - Tiling Window manager in macOS
 - ✅ `skhd`
     - A simple hotkey daemon in macOS
@@ -53,7 +53,7 @@ brew install --HEAD tizee/personal/skhd
 brew install --HEAD tizee/personal/boreders
 ```
 
-### Aseprite
+### Aseprite.app
 
 - see [tizee/build-aseprite-from-source](https://github.com/tizee/build-aseprite-from-source)
 

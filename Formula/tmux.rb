@@ -39,8 +39,8 @@ class Tmux < Formula
     end
 
     ENV.append "LDFLAGS", "-lresolv"
-    # enable OSC-8 hyperlinks feature
-    ENV.append "PKG_CONFIG", Formula["ncurses"].lib/"pkgconfig"
+    # use newer version of ncurses library to enable the OSC-8 hyperlinks feature
+    ENV.append "PKG_CONFIG_PATH", "#{Formula["ncurses"].lib}/pkgconfig", ":"
     system "./configure", *args, *std_configure_args
 
     system "make", "install"
