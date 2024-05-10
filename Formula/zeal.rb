@@ -3,21 +3,16 @@ class Zeal < Formula
   homepage "http://zealdocs.org/"
   head "https://github.com/zealdocs/zeal.git", branch: "main"
 
+  depends_on :macos => :high_sierra
   depends_on "cmake" => :build
   depends_on "qt@5"
   depends_on "libarchive"
 
   def caveats
     <<~EOS
-    You can move Zeal.app to the Applications folder if you do not prefer symlink.
+      You can link Zeal.app to the Applications folder.
 
-      Apple Silicon:
-
-      cp -Rp $(brew --prefix zeal)/Zeal.app /Applications/
-
-      Intel Macs:
-
-      cp -Rp $(brew --prefix zeal)/Zeal.app /Applications/
+      ln -s $(brew --prefix zeal)/Zeal.app /Applications/Zeal.app
 
     EOS
   end

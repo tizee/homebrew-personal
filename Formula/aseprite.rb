@@ -14,11 +14,10 @@ class Aseprite < Formula
   # https://github.com/aseprite/skia/releases/tag/m102-861e4743af
   resource "skia-m102" do
     url "https://github.com/aseprite/skia/releases/download/m102-861e4743af/Skia-macOS-Release-arm64.zip"
-    sha256 "3eac3a0a5792a38e1b21a429b359316cfbe402d7"
+    sha256 "3eac3a0a5792a38e1b21a429b359316cfbe402d77795861a3d40d52c1a8cb8cd"
   end
 
   def install
-    clear_env
     (var/"log/aseprite").mkpath
 
     aseprite_skia_path = buildpath/"skia"
@@ -27,7 +26,7 @@ class Aseprite < Formula
     args = %W[
       -DCMAKE_BUILD_TYPE=RelWithDebInfo
       -DCMAKE_OSX_ARCHITECTURES=arm64
-      -DCMAKE_OSX_DEPLOYMENT_TARGET=#{MacOS::Xcode.version}
+      -DCMAKE_OSX_DEPLOYMENT_TARGET=#{MacOS.version}
       -DCMAKE_OSX_SYSROOT=#{MacOS.sdk_path}
       -DLAF_BACKEND=skia
       -DSKIA_DIR=#{aseprite_skia_path}
@@ -37,19 +36,27 @@ class Aseprite < Formula
     ]
 
     aseprite_path = buildpath/"build"
-    mkdir aseprite_path/"build" do
-      system "cmake", "-G", "Ninja", "..", *(std_cmake_args + args)
-      system "cmake", "--build", "."
-      system "codesign", "--force", "-s", "-", "bin/aseprite"
+    mkdir aseprite_path do
+      system "cmake", "-G", "Ninja", "..", *args
+      system "ninja", "aseprite"
     end
 
     # bundle Aseprite.app
-    system "mv", buildpath/"build/bin/aseprite", buildpath/"assets/Aseprite.app/Contents/MacOS"
-    system "mv", buildpath/"build/bin/data", buildpath/"assets/Aseprite.app/Contents/Resources"
-    opt_prefix.install "assets/Aseprite.app"
-    (opt_prefix/"Aseprite.app").install_symlink "/Applications/Aseprite.app"
+    mv "#{buildpath}/build/bin/aseprite", "#{buildpath}/assets/Aseprite.app/Contents/MacOS/aseprite"
+    mv "#{buildpath}/build/bin/data", "#{buildpath}/assets/Aseprite.app/Contents/Resources/data"
 
-    bin.install "#{opt_prefix}/Aseprite.app/Contents/MacOS/aseprite"
+    prefix.install "assets/Aseprite.app"
+    (bin/"aseprite").write("#!/bin/sh\n#{prefix}/Aseprite.app/Contents/MacOS/aseprite \"$@\"\n")
+
+  end
+
+  def caveats
+    <<~EOS
+      You can link Aseprite.app to the Applications folder.
+
+      ln -s $(brew --prefix aseprite)/Aseprite.app /Applications/Aseprite.app
+
+    EOS
   end
 
   test do

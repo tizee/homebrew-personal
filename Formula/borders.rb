@@ -5,33 +5,15 @@ class Borders < Formula
   license "GPL-3.0-only"
   head "https://github.com/FelixKratz/JankyBorders.git", branch: "main"
 
-  depends_on :macos => :sonoma
-
-  def clear_env
-    ENV.delete("CFLAGS")
-    ENV.delete("LDFLAGS")
-    ENV.delete("CXXFLAGS")
-  end
+  depends_on :macos => :ventura
 
   def install
-    clear_env
     (var/"log/jankyborders").mkpath
-    system "make"
+    system "make", "-j1"
 
     system "codesign", "--force", "-s", "-", "#{buildpath}/bin/borders"
     bin.install "#{buildpath}/bin/borders"
-
-    man.mkpath
     man1.install "#{buildpath}/docs/borders.1"
-  end
-
-  service do
-    run "#{opt_bin}/borders"
-    environment_variables PATH: std_service_path_env, LANG: "en_US.UTF-8"
-    keep_alive true
-    process_type :interactive
-    log_path "#{var}/log/borders/borders.out.log"
-    error_log_path "#{var}/log/borders/borders.err.log"
   end
 
   test do
