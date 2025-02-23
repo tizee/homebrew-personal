@@ -13,6 +13,12 @@ Some homebrew formuales I use.
 brew tap tizee/personal
 ```
 
+### How to update the package with latest commit
+
+```
+brew upgrade --fetch-HEAD <package_name>
+```
+
 ## Formula
 
 - ✅ `zeal`
