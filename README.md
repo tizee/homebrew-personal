@@ -37,7 +37,7 @@ brew upgrade --fetch-HEAD <package_name>
     - Tiling Window manager in macOS
 - ✅ `skhd`
     - A simple hotkey daemon in macOS
-- 🚧 `gitstatus`
+- ✅ `gitstatus`
     - **gitstatus** is a 10x faster alternative to `git status` and `git describe`.
 
 ### yabai
