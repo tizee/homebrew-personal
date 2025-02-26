@@ -39,6 +39,8 @@ brew upgrade --fetch-HEAD <package_name>
     - A simple hotkey daemon in macOS
 - ✅ `gitstatus`
     - **gitstatus** is a 10x faster alternative to `git status` and `git describe`.
+- ✅ `wezterm`
+    - GPU-accelerated cross-platform terminal emulator and multiplexer
 
 ### yabai
 
@@ -111,6 +113,18 @@ brew install --HEAD tizee/personal/perl-xml-parser
 - Verify installation
 ```
 PERL5LIB=$(brew --prefix perl-xml-parser)/libexec/lib/perl5 perl -e "require XML::Parser"
+```
+
+### Wezterm
+
+- Install
+```
+brew install --HEAD tizee/personal/wezterm
+```
+
+- links to `/Applications`
+```
+ln -s $(brew --prefix wezterm)/Wezterm.app /Applications/Wezterm.app
 ```
 
 ## Other taps
