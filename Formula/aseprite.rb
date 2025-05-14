@@ -10,18 +10,18 @@ class Aseprite < Formula
   depends_on "cmake" => :build
   depends_on "ninja" => :build
 
-  # skia-m102 for Aseprite
-  # https://github.com/aseprite/skia/releases/tag/m102-861e4743af
-  resource "skia-m102" do
-    url "https://github.com/aseprite/skia/releases/download/m102-861e4743af/Skia-macOS-Release-arm64.zip"
-    sha256 "3eac3a0a5792a38e1b21a429b359316cfbe402d77795861a3d40d52c1a8cb8cd"
+  # skia-m124 for Aseprite
+  # https://github.com/aseprite/skia/releases/tag/m124-08a5439a6b
+  resource "skia-m124" do
+    url "https://github.com/aseprite/skia/releases/download/m124-08a5439a6b/Skia-macOS-Release-arm64.zip"
+    sha256 "22663000967fc2c3f1a78190082228474955de02ffd13a352b39a48b204dac9a"
   end
 
   def install
     (var/"log/aseprite").mkpath
 
     aseprite_skia_path = buildpath/"skia"
-    resource("skia-m102").unpack aseprite_skia_path
+    resource("skia-m124").unpack aseprite_skia_path
 
     args = %W[
       -DCMAKE_BUILD_TYPE=RelWithDebInfo
