@@ -4,7 +4,7 @@ class Yabai < Formula
   homepage "https://github.com/koekeishiya/yabai"
   head "https://github.com/koekeishiya/yabai.git", branch: "master"
 
-  depends_on :macos => :high_sierra
+  depends_on :macos
 
   def clear_env
     ENV.delete("CFLAGS")
@@ -57,4 +57,3 @@ class Yabai < Formula
     assert_match "yabai-v", shell_output("#{bin}/yabai --version")
   end
 end
-
