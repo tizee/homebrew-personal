@@ -3,7 +3,7 @@ class Zeal < Formula
   homepage "http://zealdocs.org/"
   head "https://github.com/zealdocs/zeal.git", branch: "main"
 
-  depends_on :macos => :high_sierra
+  depends_on :macos
   depends_on "cmake" => :build
   depends_on "qt@5"
   depends_on "libarchive"
