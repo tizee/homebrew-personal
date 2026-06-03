@@ -42,6 +42,13 @@ brew upgrade --fetch-HEAD <package_name>
 - ✅ `wezterm`
     - GPU-accelerated cross-platform terminal emulator and multiplexer
 
+## Cask
+
+- ✅ `ice`
+    - Powerful menu bar manager for macOS. This cask installs the newest
+      pre-release build (`0.11.13-dev.2`) that fixes the UI issues on macOS 26
+      Tahoe, since the latest stable release is long outdated.
+
 ### yabai
 
 - Install
@@ -125,6 +132,23 @@ brew install --HEAD tizee/personal/wezterm
 - links to `/Applications`
 ```
 ln -s $(brew --prefix wezterm)/Wezterm.app /Applications/Wezterm.app
+```
+
+### Ice.app
+
+A powerful menu bar manager for macOS. The latest stable release predates macOS
+Tahoe and has many UI issues on current systems, so this cask intentionally
+tracks the newest pre-release build (`0.11.13-dev.2`) that fixes the macOS 26
+Tahoe rendering. Requires macOS Tahoe (26) or newer.
+
+- Install
+```
+brew install --cask tizee/personal/ice
+```
+
+- Uninstall (with cleanup)
+```
+brew uninstall --cask --zap tizee/personal/ice
 ```
 
 ## Other taps
