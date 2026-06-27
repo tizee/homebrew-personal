@@ -1,7 +1,7 @@
 class Tmux < Formula
-  desc "Terminal multiplexer - on the edge"
-  homepage "https://tmux.github.io/"
-  head "https://github.com/tmux/tmux.git", branch: "master"
+  desc "Terminal multiplexer - tizee's fork with native capture mode"
+  homepage "https://github.com/tizee/tmux"
+  head "https://github.com/tizee/tmux.git", branch: "master"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
@@ -9,20 +9,16 @@ class Tmux < Formula
   depends_on "pkg-config" => :build
   depends_on "libevent"
   depends_on "ncurses"
+  depends_on "utf8proc"
 
   uses_from_macos "bison" => :build # for yacc
-
-  # Old versions of macOS libc disagree with utf8proc character widths.
-  # https://github.com/tmux/tmux/issues/2223
-  on_system :linux, macos: :sierra_or_newer do
-    depends_on "utf8proc"
-  end
 
   def install
     system "sh", "autogen.sh"
 
     args = %W[
       --enable-sixel
+      --enable-utf8proc
       --sysconfdir=#{etc}
     ]
 
@@ -33,9 +29,6 @@ class Tmux < Formula
       # tools that link with the very old ncurses provided by macOS.
       # https://github.com/Homebrew/homebrew-core/issues/102748
       args << "--with-TERM=screen-256color"
-      args << "--enable-utf8proc" if MacOS.version >= :high_sierra
-    else
-      args << "--enable-utf8proc"
     end
 
     ENV.append "LDFLAGS", "-lresolv"
@@ -64,10 +57,10 @@ class Tmux < Formula
     require "pty"
 
     socket = testpath/tap.user
-    PTY.spawn bin/"tmux", "-S", socket, "-f", "/dev/null"
+    PTY.spawn bin/"tmux", "-S", socket, "-f", File::NULL
     sleep 10
 
-    assert_predicate socket, :exist?
+    assert_path_exists socket
     assert_predicate socket, :socket?
     assert_equal "no server running on #{socket}", shell_output("#{bin}/tmux -S#{socket} list-sessions 2>&1", 1).chomp
   end
