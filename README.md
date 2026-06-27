@@ -19,6 +19,56 @@ brew tap tizee/personal
 brew upgrade --fetch-HEAD <package_name>
 ```
 
+## Formula maintenance
+
+Workflow for editing a formula or cask in this tap.
+
+### Where files live
+
+`brew` reads formulae from the **installed tap clone**, not from a working
+checkout elsewhere:
+
+```
+$(brew --repository tizee/personal)/Formula/<name>.rb
+# = /opt/homebrew/Library/Taps/tizee/homebrew-personal/Formula/<name>.rb
+```
+
+If you keep a separate working copy of this repo, edit there and copy the file
+into the tap clone (or just edit the tap clone directly), then commit and push
+so `brew update` picks it up.
+
+### Lint before committing
+
+Always run both checks; they must pass with no output / no offenses:
+
+```sh
+brew style tizee/personal/<name>            # rubocop style
+brew audit --formula --strict tizee/personal/<name>
+```
+
+For a cask use `--cask` instead of `--formula`. Common fixes the linter wants:
+use `File::NULL` not `"/dev/null"`, `assert_path_exists` not
+`assert_predicate ..., :exist?`, and avoid removed OS-version symbols
+(`:sierra`, `:high_sierra`, ...) which newer Homebrew rejects.
+
+### Build and test locally
+
+```sh
+brew install --HEAD --build-from-source tizee/personal/<name>   # build it
+brew test tizee/personal/<name>                                 # run the test block
+brew info tizee/personal/<name>                                 # check desc/caveats render
+```
+
+For HEAD formulae, iterate with `brew reinstall --HEAD` after each change.
+
+### Documentation in a formula
+
+User-facing docs live in the `desc` (one line) and the `caveats` block (shown
+after install and in `brew info`). Keep them in sync with the upstream project
+README when behaviour changes. For the `tmux` formula specifically, the
+`caveats` documents capture mode usage and the `@capture-*` options, and the
+test block asserts the capture feature is compiled in.
+
 ## Formula
 
 - ✅ `zeal`

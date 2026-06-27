@@ -46,6 +46,29 @@ class Tmux < Formula
     <<~EOS
       Example configuration has been installed to:
         #{opt_pkgshare}
+
+      This is tizee's fork of tmux with native capture mode, built with
+      --enable-capture-mode. Capture mode overlays keyboard hints on copy
+      mode to quickly select URLs, file paths, git SHAs, emails and more.
+
+      Usage:
+        - Prefix + Y           enter capture mode from a normal pane
+        - Y (in copy mode)     arm the hint overlay on the current view
+        - type a hint          copy the match to the buffer and clipboard
+        - q / Escape / C-c     dismiss the overlay
+
+      Configure via tmux.conf user options, for example:
+        set -g @capture-patterns       "regex1|regex2"
+        set -g @capture-hint-keys      "asdfjklgh"
+        set -g @capture-hint-style     "fg=#282828,bg=#fabd2f,bold"
+
+      Custom patterns use POSIX extended regular expressions (ERE). Use
+      POSIX classes like [[:digit:]] and [[:alnum:]], not Perl shorthands
+      (\\d, \\w, \\b are unsupported). @capture-patterns appends to the
+      built-ins; @capture-patterns-override replaces them entirely:
+        set -g @capture-patterns "[A-Z]+-[[:digit:]]+|TODO|FIXME"
+
+      See the CAPTURE MODE section of the tmux(1) manual for details.
     EOS
   end
 
