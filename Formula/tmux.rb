@@ -19,6 +19,7 @@ class Tmux < Formula
     args = %W[
       --enable-sixel
       --enable-utf8proc
+      --enable-capture-mode
       --sysconfdir=#{etc}
     ]
 
@@ -53,6 +54,11 @@ class Tmux < Formula
 
     # test tmux OSC8 hyperlinks feature
     assert_match "hyperlinks", shell_output("man -P 'grep -o -m 1 hyperlinks' tmux").chomp
+
+    # capture mode is this fork's distinguishing feature and is documented
+    # in the manual only when --enable-capture-mode is in effect.
+    assert_match "CAPTURE MODE",
+                 shell_output("man -P cat tmux").chomp
 
     require "pty"
 
