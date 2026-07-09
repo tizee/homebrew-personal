@@ -13,6 +13,12 @@ class Tmux < Formula
 
   uses_from_macos "bison" => :build # for yacc
 
+  # Self-maintained dev build: keep full debug symbols in the installed binary
+  # so the ring-buffer crash logger (--enable-crash-log) and macOS .ips reports
+  # symbolize to function/line without a separate dSYM. skip_clean also prevents
+  # Homebrew's Cleaner from stripping bin/tmux. See docs/DEBUGGING.md section 5.
+  skip_clean "bin/tmux"
+
   def install
     system "sh", "autogen.sh"
 
@@ -20,6 +26,7 @@ class Tmux < Formula
       --enable-sixel
       --enable-utf8proc
       --enable-capture-mode
+      --enable-crash-log
       --sysconfdir=#{etc}
     ]
 
@@ -33,6 +40,10 @@ class Tmux < Formula
     end
 
     ENV.append "LDFLAGS", "-lresolv"
+    # Keep reliable, symbolizable backtraces for the ring-buffer crash logger
+    # (--enable-crash-log) and macOS .ips reports: frame pointers survive -O2
+    # and -g keeps function/line info. See docs/DEBUGGING.md section 5.
+    ENV.append "CFLAGS", "-fno-omit-frame-pointer -g"
     # use newer version of ncurses library to enable the OSC-8 hyperlinks feature
     ENV.append "PKG_CONFIG_PATH", "#{Formula["ncurses"].lib}/pkgconfig", ":"
     system "./configure", *args, *std_configure_args
