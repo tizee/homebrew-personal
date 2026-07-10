@@ -23,12 +23,21 @@ class Tmux < Formula
 
   def install
     # The Rust grid engine builds via `cargo`, which the configure script looks
-    # up on PATH (AC_CHECK_PROG). Homebrew's superenv scrubs PATH, so the user's
-    # rustup toolchain in ~/.cargo/bin is not visible by default. Put it back and
+    # up on PATH (AC_CHECK_PROG). Homebrew's superenv scrubs PATH *and* points
+    # HOME at a sandboxed .brew_home, so neither PATH nor `~` reach the user's
+    # rustup toolchain. Resolve the real login home from the passwd database and
     # fail loudly if there is no usable cargo rather than silently falling back
     # to the C grid engine (--enable-rust-grid would then error in configure).
-    cargo_bin = File.expand_path("~/.cargo/bin")
+    require "etc"
+    home = Etc.getpwuid.dir
+    cargo_bin = "#{home}/.cargo/bin"
     ENV.prepend_path "PATH", cargo_bin
+    # The `cargo` shim is a rustup proxy that reads RUSTUP_HOME/CARGO_HOME to
+    # pick the default toolchain. Homebrew repoints HOME at a sandbox, so point
+    # these back at the user's real rustup install or the proxy aborts with
+    # "rustup could not choose a version of cargo to run".
+    ENV["RUSTUP_HOME"] = "#{home}/.rustup"
+    ENV["CARGO_HOME"] = "#{home}/.cargo"
     unless which("cargo")
       odie <<~EOS
         --enable-rust-grid needs `cargo`, but none was found on PATH.
