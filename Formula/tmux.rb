@@ -1,5 +1,5 @@
 class Tmux < Formula
-  desc "Terminal multiplexer - tizee's fork with native capture mode"
+  desc "Terminal multiplexer - tizee's fork with capture mode and Rust grid engine"
   homepage "https://github.com/tizee/tmux"
   head "https://github.com/tizee/tmux.git", branch: "master"
 
@@ -7,6 +7,8 @@ class Tmux < Formula
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
+  # Rust grid engine (--enable-rust-grid) uses the user's own rustup toolchain
+  # (~/.cargo/bin) instead of a Homebrew-managed `rust`. See install below.
   depends_on "libevent"
   depends_on "ncurses"
   depends_on "utf8proc"
@@ -20,6 +22,21 @@ class Tmux < Formula
   skip_clean "bin/tmux"
 
   def install
+    # The Rust grid engine builds via `cargo`, which the configure script looks
+    # up on PATH (AC_CHECK_PROG). Homebrew's superenv scrubs PATH, so the user's
+    # rustup toolchain in ~/.cargo/bin is not visible by default. Put it back and
+    # fail loudly if there is no usable cargo rather than silently falling back
+    # to the C grid engine (--enable-rust-grid would then error in configure).
+    cargo_bin = File.expand_path("~/.cargo/bin")
+    ENV.prepend_path "PATH", cargo_bin
+    unless which("cargo")
+      odie <<~EOS
+        --enable-rust-grid needs `cargo`, but none was found on PATH.
+        Install a Rust toolchain (e.g. `rustup` / https://rustup.rs) so that
+        #{cargo_bin}/cargo exists, then retry.
+      EOS
+    end
+
     system "sh", "autogen.sh"
 
     args = %W[
@@ -27,6 +44,7 @@ class Tmux < Formula
       --enable-utf8proc
       --enable-capture-mode
       --enable-crash-log
+      --enable-rust-grid
       --sysconfdir=#{etc}
     ]
 
@@ -61,6 +79,11 @@ class Tmux < Formula
       This is tizee's fork of tmux with native capture mode, built with
       --enable-capture-mode. Capture mode overlays keyboard hints on copy
       mode to quickly select URLs, file paths, git SHAs, emails and more.
+
+      This build also uses the safe-Rust grid engine (--enable-rust-grid,
+      built via the `rust` toolchain) in place of the C grid.c. The two
+      engines are behaviour-for-behaviour equivalent; this is transparent at
+      runtime.
 
       Usage:
         - Prefix + Y           enter capture mode from a normal pane
